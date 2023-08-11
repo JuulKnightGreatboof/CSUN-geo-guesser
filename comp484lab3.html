@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Hello</title>
+		<style>
+			#map {
+				height: 1000px;
+				width: 50%;
+				float: left;
+				z-index: 1;
+			}
+			#quiz{
+				width: 40%;
+				margin: 0 auto;
+				z-index: 1;
+			}
+			#jacarandaHall{
+				width:190px;
+				height:125px;
+				position: relative;
+				top:260px; 
+				left:425px; 
+				z-index:2;
+			}
+			#library{
+				width:135px;
+				height:110px;
+				position: relative;
+				top:325px; 
+				left:400px; 
+				z-index:2;
+			}
+			#eucalyptusHall{
+				width:115px;
+				height:30px;
+				position: relative;
+				top:400px; 
+				left:515px; 
+				z-index:2;
+			}
+			#liveOakHall{
+				width:115px;
+				height:30px;
+				position: relative;
+				top:415px; 
+				left:515px; 
+				z-index:2;
+			}
+			#sierraHall{
+				width:125px;
+				height:38px;
+				position: relative;
+				top:380px; 
+				left:275px; 
+				z-index:2;
+			}
+			#score{
+				width: 50%;
+				height: 550px;
+				left: 50%;
+				position: relative;
+				outline: solid 2px;
+				z-index:3;
+			}
+			#yourScore{
+				position: absolute;
+				text-align: left;
+				animation: score 10s ease-out;
+				animationPlayState: paused;
+			}
+			@keyframes score {
+				0%   { 
+					transform: translateX(200%); 		
+				}
+				100% { 
+					transform: translateX(0%); 
+				}
+			}
+		</style>
+		<script>
+			const locations = ["Find Jacaranda Hall", "Find the Library", "Find Eucalyptus Hall", "Find Live Oak Hall",
+				"Find Sierra Hall", "Congratulations!"];
+			const locationId = ["jacarandaHall", "library", "eucalyptusHall", "liveOakHall",
+				"sierraHall", "Congratulations!"];
+				
+			let index = 0;
+			let points = 0;
+				
+			function initMap(){
+				let map = new google.maps.Map(document.getElementById("map"), {
+					zoom: 17,
+					center: {lat: 34.2400, lng: -118.5293},
+					clickableIcons: false,
+					
+					gestureHandling: "none",
+					zoomControl: false
+				});
+				map.setOptions({styles: styles['hide']});
+			}
+			var styles = {
+				hide: [
+					{
+						featureType: 'poi',
+						elementType: "labels",
+						stylers: [{visibility: 'off'}]
+					},
+					{
+						elementType: 'labels.text',
+						stylers: [{ visibility: 'off' }],
+					}
+				]
+			};
+			// window.addEventListener("dblclick", function(){ alert("Double-click detected"); });
+			function clicked(value){
+				if(document.getElementById("question").innerHTML != "Congratulations!"){
+					if(document.getElementById("question").innerHTML == value){
+						document.getElementById("answer").innerHTML = "Answer: Correct!";
+						document.getElementById(locationId[index]).style.outline = "solid 1px green";
+						index += 1;
+						points += 1;
+						document.getElementById("question").innerHTML = locations[index];
+						if(index == 5){
+							
+							document.getElementById("yourScore").innerHTML = "Your Score was "+points+" out of 5!";
+							document.getElementById("yourScore").style.animationPlayState="running";
+						}
+					} else {
+						document.getElementById("answer").innerHTML = "Answer: Wrong...";
+						document.getElementById(locationId[index]).style.outline = "solid 1px red";
+						index += 1;
+						document.getElementById("question").innerHTML = locations[index];
+						if(index == 5){
+							document.getElementById("yourScore").innerHTML = "Your Score was "+points+" out of 5!";
+						}
+					}
+				}
+			}
+		</script>
+		<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAE_EVXCXcHTR6YO_0v_fvaLogWf1GqKE8&callback=initMap"></script>
+	</head>
+	
+	<body>
+		<div ondblclick="clicked('Wrong')" id="map"></div>
+		<div ondblclick="clicked('Find Jacaranda Hall')" id="jacarandaHall"></div>
+		<div ondblclick="clicked('Find the Library')" id="library"></div>
+		<div ondblclick="clicked('Find Eucalyptus Hall')" id="eucalyptusHall"></div>
+		<div ondblclick="clicked('Find Live Oak Hall')" id="liveOakHall"></div>
+		<div ondblclick="clicked('Find Sierra Hall')" id="sierraHall"></div>
+		<div id="quiz">
+			<h1 id="question">Find Jacaranda Hall</h1>
+			<p id="answer">Answer: </p>
+		</div>
+		<div id="score">
+			<h1 id="yourScore"></h1>
+		</div>
+	</body>
+</html>
+
